@@ -1,0 +1,35 @@
+﻿# Build output
+/build/
+/out/
+/bin/
+/classes/
+
+# IDE
+/.idea/
+/.project
+/.classpath
+/.settings/
+*.iml
+
+# Java
+*.class
+*.jar
+!web/WEB-INF/lib/*.jar
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp
+*.log
+*.tmp
+/temp/
+
+# RAR/ZIP source packages (keep in repo but ignore extracted)
+*.rar
+*.zip
+!web/WEB-INF/lib/*.zip
+
+# Extracted temp
+/mysql/mysql_extracted/
+/HBuilder/
