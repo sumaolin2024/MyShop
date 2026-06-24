@@ -7,7 +7,6 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 
-@WebServlet("/user/*")
 public class UserServlet extends HttpServlet {
     private UserService userService = new UserService();
 

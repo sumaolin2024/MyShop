@@ -1,4 +1,4 @@
-﻿package com.myshop.dao;
+package com.myshop.dao;
 
 import com.myshop.entity.Admin;
 import com.myshop.util.DBUtil;

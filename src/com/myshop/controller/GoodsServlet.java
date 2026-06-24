@@ -7,7 +7,6 @@ import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.util.*;
 
-@WebServlet("/goods/*")
 public class GoodsServlet extends HttpServlet {
     private GoodsService goodsService = new GoodsService();
 

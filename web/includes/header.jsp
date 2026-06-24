@@ -17,11 +17,11 @@
         </nav>
         <div class="header-actions">
             <% if (sessionUser != null) { %>
-                <a href="<%= request.getContextPath() %>/user/profile.jsp" class="icon-btn" title="My Account">👤</a>
+                <a href="<%= request.getContextPath() %>/user/profile.jsp" class="icon-btn" title="My Account">&#x1F464;</a>
             <% } else { %>
-                <a href="<%= request.getContextPath() %>/user/login.jsp" class="icon-btn" title="Login">👤</a>
+                <a href="<%= request.getContextPath() %>/user/login.jsp" class="icon-btn" title="Login">&#x1F464;</a>
             <% } %>
-            <a href="<%= request.getContextPath() %>/cart/index.jsp" class="icon-btn cart-icon" title="Cart">🛒
+            <a href="<%= request.getContextPath() %>/cart/index.jsp" class="icon-btn cart-icon" title="Cart">&#x1F6D2;
                 <span class="cart-badge <%= cartCount > 0 ? "show" : "" %>" id="cartBadge"><%= cartCount > 0 ? cartCount : "" %></span>
             </a>
             <div class="hamburger" id="hamburger" onclick="toggleMenu()">
@@ -43,3 +43,4 @@
         <% } %>
     </nav>
 </header>
+

@@ -1,4 +1,4 @@
-﻿package com.myshop.util;
+package com.myshop.util;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import java.sql.Connection;

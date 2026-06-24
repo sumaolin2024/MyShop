@@ -8,7 +8,6 @@ import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.util.*;
 
-@WebServlet("/cart/*")
 public class CartServlet extends HttpServlet {
     private CartService cartService = new CartService();
     private OrderService orderService = new OrderService();
