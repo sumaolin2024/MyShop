@@ -1,4 +1,4 @@
-﻿# Build output
+# Build output
 /build/
 /out/
 /bin/
@@ -25,11 +25,17 @@ Thumbs.db
 *.tmp
 /temp/
 
-# RAR/ZIP source packages (keep in repo but ignore extracted)
+# RAR/ZIP
 *.rar
 *.zip
 !web/WEB-INF/lib/*.zip
 
-# Extracted temp
+# Large binaries - do not commit
+mysql/navicat121_premium_cs_x64.exe
+mysql/mysql.zip
 /mysql/mysql_extracted/
 /HBuilder/
+
+# Tomcat / JDK runtime
+/tomcat9/
+/jdk8/
