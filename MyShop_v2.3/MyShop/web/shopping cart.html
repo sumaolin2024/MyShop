@@ -516,151 +516,79 @@
     <div class="toast" id="toast"></div>
 
     <script>
-        // ===== 购物车数据 =====
-        let cartData = [
-            { id: 1, name: "高级轻羽绒便携式茄克", meta: "黑色 / M", price: 399.00, originalPrice: 499.00, quantity: 1,
-                image: "🧥" },
-            { id: 2, name: "精纺美利奴圆领针织衫", meta: "灰色 / L", price: 199.00, originalPrice: null, quantity: 2,
-                image: "👕" },
-            { id: 3, name: "高腰修身牛仔裤", meta: "靛蓝 / 28", price: 299.00, originalPrice: 299.00, quantity: 1,
-                image: "👖" },
-            { id: 4, name: "柔软摇粒绒连帽外套", meta: "米色 / XL", price: 249.00, originalPrice: 299.00, quantity: 1,
-                image: "🧥" }
-        ];
+        var cartData = [], FREE_SHIPPING_THRESHOLD = 399, SHIPPING_FEE = 10;
+        var cartWrapperEl = document.getElementById('cartWrapper'), toastEl = document.getElementById('toast');
 
-        const FREE_SHIPPING_THRESHOLD = 399;
-        const SHIPPING_FEE = 10;
+        function showToast(msg) {
+            toastEl.textContent = msg; toastEl.classList.add('show');
+            clearTimeout(toastEl._timer); toastEl._timer = setTimeout(function(){ toastEl.classList.remove('show'); }, 2500);
+        }
 
-        const cartItemsEl = document.getElementById('cartItems');
-        const cartWrapperEl = document.getElementById('cartWrapper');
-        const cartCountEl = document.getElementById('cartCount');
-        const subtotalEl = document.getElementById('subtotal');
-        const discountEl = document.getElementById('discount');
-        const discountRowEl = document.getElementById('discountRow');
-        const shippingEl = document.getElementById('shipping');
-        const totalEl = document.getElementById('total');
-        const freeShippingEl = document.getElementById('freeShipping');
-        const freeShippingDiffEl = document.getElementById('freeShippingDiff');
-        const toastEl = document.getElementById('toast');
+        async function checkLogin() {
+            var res = await fetch('/api/user'); var data = await res.json();
+            if (data.ok) {
+                document.querySelector('.header-actions').innerHTML = '<span style="font-size:13px;margin-right:8px;">' + data.user.username + '</span><a href="#" onclick="doLogout();return false;" style="font-size:13px;">退出</a><a href="shopping%20cart.html">&#x1F6D2;</a>';
+                await loadCart();
+            } else { renderLoginPrompt(); }
+        }
+        async function doLogout() { await fetch('/api/logout', { method: 'POST' }); location.reload(); }
+        function renderLoginPrompt() {
+            cartWrapperEl.innerHTML = '<div class="empty-cart"><div class="empty-cart-icon">&#x1F464;</div><h2>请先登录</h2><p>登录后可查看购物车</p><a href="login.html" class="btn btn-primary" style="width:200px;margin:0 auto;">去登录</a></div>';
+            document.getElementById('cartSummary').style.display = 'none';
+        }
+
+        async function loadCart() {
+            var res = await fetch('/api/cart'); var data = await res.json();
+            if (!data.ok) { showToast(data.msg); return; }
+            cartData = data.data; renderCart();
+        }
 
         function renderCart() {
             if (cartData.length === 0) {
-                cartWrapperEl.innerHTML = `
-                    <div class="empty-cart">
-                        <div class="empty-cart-icon">🛒</div>
-                        <h2>您的购物车是空的</h2>
-                        <p>快去挑选心仪的商品吧</p>
-                        <a href="index.html" class="btn btn-primary" style="width:200px;margin:0 auto;">继续购物</a>
-                    </div>
-                `;
-                return;
+                cartWrapperEl.innerHTML = '<div class="empty-cart"><div class="empty-cart-icon">&#x1F6D2;</div><h2>购物车是空的</h2><p>快去挑选心仪的商品吧</p><a href="index.html" class="btn btn-primary" style="width:200px;margin:0 auto;">继续购物</a></div>';
+                document.getElementById('cartSummary').style.display = 'none'; return;
             }
-
-            const headerHTML = `
-                <div class="cart-header">
-                    <span>商品</span><span></span><span>单价</span><span>数量</span><span></span>
-                </div>
-            `;
-            const itemsHTML = cartData.map(item => `
-                <div class="cart-item" data-id="${item.id}">
-                    <div class="item-image">${item.image}</div>
-                    <div class="item-details">
-                        <h3>${item.name}</h3>
-                        <div class="item-meta">${item.meta}</div>
-                    </div>
-                    <div class="item-price">
-                        ¥${item.price.toFixed(2)}
-                        ${item.originalPrice && item.originalPrice !== item.price ? `<span class="item-original-price">¥${item.originalPrice.toFixed(2)}</span>` : ''}
-                    </div>
-                    <div class="item-quantity">
-                        <div class="quantity-control">
-                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)" ${item.quantity <= 1 ? 'disabled' : ''}>−</button>
-                            <input type="number" class="quantity-input" value="${item.quantity}" min="1" max="99" onchange="setQuantity(${item.id}, this.value)">
-                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
-                        </div>
-                    </div>
-                    <div class="item-delete">
-                        <button class="delete-btn" onclick="deleteItem(${item.id})">×</button>
-                    </div>
-                </div>
-            `).join('');
-
-            cartItemsEl.innerHTML = headerHTML + itemsHTML;
+            document.getElementById('cartSummary').style.display = '';
+            var h = '<div class="cart-header"><span>商品</span><span></span><span>单价</span><span>数量</span><span></span></div>';
+            var items = cartData.map(function(item) {
+                var img = item.goodsPicture ? '<img src="' + item.goodsPicture + '" alt="" style="width:60px;height:60px;object-fit:cover;border-radius:4px;">' : '<div class="item-image">📦</div>';
+                return '<div class="cart-item" data-id="' + item.id + '"><div class="item-image">' + img + '</div><div class="item-details"><h3>' + item.goodsName + '</h3></div><div class="item-price">¥' + item.goodsPrice.toFixed(2) + '</div><div class="item-quantity"><div class="quantity-control"><button class="quantity-btn" onclick="updateQuantity(' + item.id + ',-1)" ' + (item.goodsNum <= 1 ? 'disabled' : '') + '>−</button><input type="number" class="quantity-input" value="' + item.goodsNum + '" min="1" max="99" onchange="setQuantity(' + item.id + ',this.value)"><button class="quantity-btn" onclick="updateQuantity(' + item.id + ',1)">+</button></div></div><div class="item-delete"><button class="delete-btn" onclick="deleteItem(' + item.id + ')">×</button></div></div>';
+            }).join('');
+            cartWrapperEl.innerHTML = '<div class="cart-items" id="cartItems">' + h + items + '</div><aside class="cart-summary" id="cartSummary"><h2 class="summary-title">订单摘要</h2><div class="summary-row"><span>商品总额</span><span id="subtotal">¥0.00</span></div><div class="summary-row"><span>运费</span><span id="shipping">¥0.00</span></div><div class="summary-row total"><span>合计</span><span id="total">¥0.00</span></div><div class="free-shipping" id="freeShipping">满¥' + FREE_SHIPPING_THRESHOLD + '免运费</div><a href="#" class="btn btn-primary" onclick="event.preventDefault();showToast(\'结算功能开发中\')">去结算</a><a href="index.html" class="btn btn-secondary">继续购物</a></aside>';
             updateSummary();
         }
 
         function updateSummary() {
-            const subtotal = cartData.reduce((sum, i) => sum + i.price * i.quantity, 0);
-            const originalTotal = cartData.reduce((sum, i) => sum + (i.originalPrice || i.price) * i.quantity, 0);
-            const discount = originalTotal - subtotal;
-            const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
-            const total = subtotal + shipping;
-
-            cartCountEl.textContent = `共 ${cartData.reduce((sum, i) => sum + i.quantity, 0)} 件商品`;
-            subtotalEl.textContent = `¥${subtotal.toFixed(2)}`;
-            shippingEl.textContent = shipping === 0 ? '免运费' : `¥${shipping.toFixed(2)}`;
-            totalEl.textContent = `¥${total.toFixed(2)}`;
-
-            if (discount > 0) {
-                discountRowEl.style.display = 'flex';
-                discountEl.textContent = `-¥${discount.toFixed(2)}`;
-            } else {
-                discountRowEl.style.display = 'none';
-            }
-
-            if (subtotal >= FREE_SHIPPING_THRESHOLD) {
-                freeShippingEl.classList.add('achieved');
-                freeShippingEl.innerHTML = '✓ 您已享受免运费服务';
-            } else {
-                freeShippingEl.classList.remove('achieved');
-                const diff = FREE_SHIPPING_THRESHOLD - subtotal;
-                freeShippingDiffEl.textContent = `¥${diff.toFixed(2)}`;
-                freeShippingEl.innerHTML = `再买 <strong>¥${diff.toFixed(2)}</strong> 即可享受免运费`;
-            }
+            var sub = cartData.reduce(function(s,i){ return s + i.goodsPrice * i.goodsNum; }, 0);
+            var ship = sub >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE, total = sub + ship;
+            var e = document.getElementById('subtotal'); if (e) e.textContent = '¥' + sub.toFixed(2);
+            e = document.getElementById('shipping'); if (e) e.textContent = ship === 0 ? '免运费' : '¥' + ship.toFixed(2);
+            e = document.getElementById('total'); if (e) e.textContent = '¥' + total.toFixed(2);
+            e = document.getElementById('freeShipping'); if (e) { if (sub >= FREE_SHIPPING_THRESHOLD) { e.className = 'free-shipping achieved'; e.innerHTML = '✓ 免运费'; } else { e.className = 'free-shipping'; e.innerHTML = '再买 <strong>¥' + (FREE_SHIPPING_THRESHOLD - sub).toFixed(2) + '</strong> 免运费'; } }
+            e = document.getElementById('cartCount'); if (e) e.textContent = '共 ' + cartData.reduce(function(s,i){ return s + i.goodsNum; }, 0) + ' 件商品';
         }
 
-        function updateQuantity(id, delta) {
-            const item = cartData.find(i => i.id === id);
-            if (!item) return;
-            const newQty = item.quantity + delta;
-            if (newQty < 1 || newQty > 99) return;
-            item.quantity = newQty;
-            renderCart();
+        async function updateQuantity(id, delta) {
+            var item = cartData.find(function(i){ return i.id === id; }); if (!item) return;
+            var n = item.goodsNum + delta; if (n < 1 || n > 99) return;
+            var r = await fetch('/api/cart/update', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: id, num: n }) });
+            var d = await r.json(); if (d.ok) { item.goodsNum = n; renderCart(); } else showToast(d.msg);
         }
-
-        function setQuantity(id, value) {
-            let qty = parseInt(value);
-            if (isNaN(qty) || qty < 1) qty = 1;
-            if (qty > 99) qty = 99;
-            const item = cartData.find(i => i.id === id);
-            if (item) {
-                item.quantity = qty;
-                renderCart();
-            }
+        async function setQuantity(id, v) {
+            var q = parseInt(v); if (isNaN(q) || q < 1) q = 1; if (q > 99) q = 99;
+            var r = await fetch('/api/cart/update', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: id, num: q }) });
+            var d = await r.json(); if (d.ok) { var item = cartData.find(function(i){ return i.id === id; }); if (item) { item.goodsNum = q; renderCart(); } }
         }
-
-        function deleteItem(id) {
-            const el = document.querySelector(`[data-id="${id}"]`);
-            if (el) {
-                el.style.transition = 'all 0.3s';
-                el.style.opacity = '0';
-                el.style.transform = 'translateX(-20px)';
-                setTimeout(() => {
-                    cartData = cartData.filter(i => i.id !== id);
-                    renderCart();
-                    showToast('商品已移除');
+        async function deleteItem(id) {
+            var el = document.querySelector('[data-id="' + id + '"]');
+            if (el) { el.style.opacity = '0'; el.style.transform = 'translateX(-20px)';
+                setTimeout(async function() {
+                    var r = await fetch('/api/cart/delete', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: id }) });
+                    var d = await r.json(); if (d.ok) { cartData = cartData.filter(function(i){ return i.id !== id; }); renderCart(); showToast('已移除'); }
                 }, 300);
             }
         }
-
-        function showToast(msg) {
-            toastEl.textContent = msg;
-            toastEl.classList.add('show');
-            clearTimeout(toastEl._timer);
-            toastEl._timer = setTimeout(() => toastEl.classList.remove('show'), 2500);
-        }
-
-        renderCart();
+        checkLogin();
     </script>
 </body>
 </html>

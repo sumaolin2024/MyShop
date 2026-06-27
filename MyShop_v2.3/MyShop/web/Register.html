@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8" />
@@ -667,7 +667,7 @@
             var agreeTerms = document.getElementById('agreeTerms');
             var registerBtn = document.getElementById('registerBtn');
 
-            registerForm.addEventListener('submit', function(e) {
+            registerForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
 
                 var username = regUser.value.trim();
@@ -711,16 +711,26 @@
                 if (!agreeTerms.checked) { alert('请先阅读并同意用户协议');
                     agreeTerms.focus(); return; }
 
-                // 模拟注册
+                // 调用后端注册API
                 registerBtn.classList.add('loading');
-                setTimeout(function() {
+                try {
+                    var resp = await fetch('/api/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: username, password: password, email: email })
+                    });
                     registerBtn.classList.remove('loading');
-                    showToast('🎉 注册成功！欢迎 ' + username + '！');
-                    // 注册成功后跳转到登录页
-                    setTimeout(function() {
-                        window.location.href = 'login.html';
-                    }, 700);
-                }, 1500);
+                    var data = await resp.json();
+                    if (data.ok) {
+                        showToast('🎉 注册成功！欢迎 ' + username + '！');
+                        setTimeout(function() { window.location.href = 'login.html'; }, 700);
+                    } else {
+                        showToast('❌ ' + (data.msg || '注册失败'));
+                    }
+                } catch (err) {
+                    registerBtn.classList.remove('loading');
+                    showToast('❌ 网络错误，请稍后重试');
+                }
             });
 
             // ===== 用户协议链接 =====

@@ -1,0 +1,13 @@
+[
+  {
+    "id": 1,
+    "userId": 1,
+    "goodsId": 101,
+    "goodsNum": 3,
+    "checked": 1,
+    "createTime": "2026-06-27T07:30:37.999Z",
+    "goodsName": "iPhone 17 Pro",
+    "goodsPrice": 10999,
+    "goodsPicture": "test.jpg"
+  }
+]

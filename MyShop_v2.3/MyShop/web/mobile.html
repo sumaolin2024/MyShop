@@ -785,5 +785,74 @@ function toggleMenu() {
 }
 </script>
 
+
+
+
+<!-- Toast -->
+<div class="toast" id="toast" style="display:none;position:fixed;bottom:40px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:10px 24px;border-radius:20px;z-index:9999;font-size:14px;"></div>
+
+<script>
+window._productMap = { 101: { name: 'iPhone 17 Pro', price: 10999, picture: 'static/image/mobile/iPhone17Pro   10999￥/first/微信图片_20260625143833_361_556.jpg' }, 102: { name: 'iPhone Air', price: 5999, picture: 'static/image/mobile/iPhone Air   5999￥/first/微信图片_20260625143824_349_556.jpg' }, 103: { name: 'vivo x300 Pro', price: 5999, picture: 'static/image/mobile/vivo x300 Pro   5999￥/first/屏幕截图 2026-06-26 104321.png' }, 104: { name: 'HUAWEI Pura 80', price: 4999, picture: 'static/image/mobile/HUAWEI Pura 80    4999￥/first/微信图片_20260625143838_369_556.jpg' }, 105: { name: 'TWS Neo 耳机', price: 699, picture: 'static/image/mobile/TWS Neo   699￥/first/屏幕截图 2026-06-26 104525.png' } }; window._cartGoodsIds = [101, 102, 103, 104, 105];
+
+
+// 检查登录状态
+(async function(){
+    try {
+        var res = await fetch('/api/user');
+        var data = await res.json();
+        if (data.ok) {
+            var actions = document.querySelector('.header-actions');
+            if (actions) actions.innerHTML = '<span style="font-size:13px;margin-right:8px;">' + data.user.username + '</span><a href="#" onclick="fetch(\'/api/logout\',{method:\'POST\'}).then(function(){location.reload()});return false;" style="font-size:13px;">退出</a><a href="shopping%20cart.html" title="购物车">&#x1F6D2;</a>';
+        }
+    } catch(e) {}
+})();
+
+function showToast(msg) {
+    var t = document.getElementById('toast');
+    if (!t) return;
+    t.textContent = msg; t.style.display = 'block';
+    setTimeout(function(){ t.style.display = 'none'; }, 2000);
+}
+
+async function addToCart(goodsId) {
+    try {
+        var userRes = await fetch('/api/user');
+        var userData = await userRes.json();
+        if (!userData.ok) {
+            showToast('请先登录');
+            setTimeout(function(){ location.href = 'login.html'; }, 800);
+            return;
+        }
+        var p = window._productMap[goodsId];
+        var body = { goodsId: goodsId, num: 1 };
+        if (p) { body.goodsName = p.name; body.goodsPrice = p.price; body.goodsPicture = p.picture; }
+        var res = await fetch('/api/cart/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        var data = await res.json();
+        showToast(data.ok ? '✅ 已加入购物车' : '❌ ' + (data.msg || '操作失败'));
+    } catch(e) {
+        showToast('网络错误');
+    }
+}
+
+(function(){
+    var ids = window._cartGoodsIds || [];
+    var btns = document.querySelectorAll('a.btn-sm, a.btn-blue, a.btn-outline-white');
+    var idx = 0;
+    btns.forEach(function(btn) {
+        var txt = btn.textContent.trim();
+        if (txt === '立即购买' || txt === '选购') {
+            btn.href = 'javascript:void(0)';
+            (function(id){
+                btn.onclick = function(e) { e.preventDefault(); addToCart(id); };
+            })(ids[idx] || (101 + idx));
+            idx++;
+        }
+    });
+})();
+</script>
 </body>
 </html>

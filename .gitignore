@@ -6,17 +6,10 @@
 
 # IDE
 /.idea/
+/.project
+/.classpath
+/.settings/
 *.iml
-
-# MyEclipse project config (tracked for team consistency)
-# .project, .classpath, .settings, .mymetadata are allowed
-!.project
-!.classpath
-!.settings/
-!.mymetadata
-
-# MyEclipse local metadata (not tracked)
-/.myeclipse/
 
 # Java
 *.class
@@ -32,17 +25,11 @@ Thumbs.db
 *.tmp
 /temp/
 
-# RAR/ZIP
+# RAR/ZIP source packages (keep in repo but ignore extracted)
 *.rar
 *.zip
 !web/WEB-INF/lib/*.zip
 
-# Large binaries - do not commit
-mysql/navicat121_premium_cs_x64.exe
-mysql/mysql.zip
+# Extracted temp
 /mysql/mysql_extracted/
 /HBuilder/
-
-# Tomcat / JDK runtime
-/tomcat9/
-/jdk8/

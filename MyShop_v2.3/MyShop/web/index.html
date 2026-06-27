@@ -804,7 +804,7 @@
             return '<div class="product-card">' +
                 '<div class="product-card-image">' + newTag +
                 '<img src="' + p.pic + '" alt="' + p.name + '" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22300%22><rect fill=%22%23f5f5f5%22 width=%22300%22 height=%22300%22/><text x=%22150%22 y=%22150%22 text-anchor=%22middle%22 fill=%22%23ccc%22 font-size=%2214%22>无图</text></svg>\'">' +
-                '<div class="product-card-actions"><button onclick="event.stopPropagation();showToast(\'已加入购物车\')">+</button></div>' +
+                '<div class="product-card-actions"><button onclick="event.stopPropagation();addToCart(' + p.id + ')">+</button></div>' +
                 '</div>' +
                 '<div class="product-card-name">' + p.name + '</div>' +
                 '<div class="product-card-price">&yen;' + p.price.toFixed(2) + '</div>' +
@@ -904,6 +904,35 @@
             });
 
         console.log('✅ 我的商城首页已加载（手机数码 → mobile.html，购物车 → shopping cart.html，潮流服饰 → fashion.html，户外运动 → sports.html）');
+    
+        async function addToCart(goodsId) {
+            try {
+                var userRes = await fetch('/api/user');
+                var userData = await userRes.json();
+                if (!userData.ok) { showToast('请先登录'); setTimeout(function(){ location.href = 'login.html'; }, 800); return; }
+                var p = products.find(function(item) { return item.id === goodsId; });
+                if (!p) { showToast('商品不存在'); return; }
+                var res = await fetch('/api/cart/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ goodsId: goodsId, goodsName: p.name, goodsPrice: p.price, goodsPicture: p.pic, num: 1 })
+                });
+                var data = await res.json();
+                showToast(data.ok ? '✅ 已加入购物车' : '❌ ' + (data.msg || '操作失败'));
+            } catch(e) { showToast('网络错误'); }
+        }
+    
+        // 检查登录状态，更新导航栏
+        (async function(){
+            try {
+                var res = await fetch('/api/user');
+                var data = await res.json();
+                if (data.ok) {
+                    var actions = document.querySelector('.header-actions');
+                    if (actions) actions.innerHTML = '<span style="font-size:13px;margin-right:8px;">' + data.user.username + '</span><a href="#" onclick="fetch(\'/api/logout\',{method:\'POST\'}).then(function(){location.reload()});return false;" style="font-size:13px;">退出</a><a href="shopping%20cart.html" title="购物车">&#x1F6D2;</a>';
+                }
+            } catch(e) {}
+        })();
     </script>
 
 </body>

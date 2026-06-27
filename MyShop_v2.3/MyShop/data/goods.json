@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "categoryId": 7,
+    "name": "葡萄柚",
+    "price": 10,
+    "picture": "static/image/goods/grapefruit.png",
+    "stock": 10,
+    "sales": 122,
+    "isNew": 0,
+    "isHot": 1,
+    "spec": "大果 300g"
+  },
+  {
+    "id": 2,
+    "categoryId": 7,
+    "name": "葡萄",
+    "price": 10,
+    "picture": "static/image/goods/grape.png",
+    "stock": 20,
+    "sales": 115,
+    "isNew": 0,
+    "isHot": 1,
+    "spec": "一级果"
+  },
+  {
+    "id": 3,
+    "categoryId": 7,
+    "name": "西红柿",
+    "price": 3,
+    "picture": "static/image/goods/tomatoes.png",
+    "stock": 20,
+    "sales": 102,
+    "isNew": 0,
+    "isHot": 0,
+    "spec": "5斤装"
+  },
+  {
+    "id": 4,
+    "categoryId": 7,
+    "name": "生菜",
+    "price": 6,
+    "picture": "static/image/goods/lettuce.png",
+    "stock": 20,
+    "sales": 89,
+    "isNew": 0,
+    "isHot": 0,
+    "spec": "1斤装"
+  },
+  {
+    "id": 5,
+    "categoryId": 7,
+    "name": "菠菜",
+    "price": 4,
+    "picture": "static/image/goods/spinach.png",
+    "stock": 50,
+    "sales": 76,
+    "isNew": 0,
+    "isHot": 0,
+    "spec": "1斤装"
+  },
+  {
+    "id": 6,
+    "categoryId": 7,
+    "name": "脐橙",
+    "price": 8,
+    "picture": "static/image/goods/orange.png",
+    "stock": 50,
+    "sales": 160,
+    "isNew": 0,
+    "isHot": 1,
+    "spec": "1斤装"
+  },
+  {
+    "id": 7,
+    "categoryId": 7,
+    "name": "香菇",
+    "price": 8,
+    "picture": "static/image/goods/mushroom.jpg",
+    "stock": 500,
+    "sales": 42,
+    "isNew": 0,
+    "isHot": 0,
+    "spec": "1斤装"
+  },
+  {
+    "id": 8,
+    "categoryId": 7,
+    "name": "进口香蕉",
+    "price": 2,
+    "picture": "static/image/goods/banana.jpeg",
+    "stock": 60,
+    "sales": 55,
+    "isNew": 1,
+    "isHot": 0,
+    "spec": "2根"
+  },
+  {
+    "id": 9,
+    "categoryId": 7,
+    "name": "陕西蜜梨",
+    "price": 6.9,
+    "picture": "static/image/goods/pear.jpeg",
+    "stock": 30,
+    "sales": 33,
+    "isNew": 1,
+    "isHot": 0,
+    "spec": "约600g"
+  },
+  {
+    "id": 10,
+    "categoryId": 7,
+    "name": "加力果",
+    "price": 26.8,
+    "picture": "static/image/goods/apple.jpeg",
+    "stock": 19,
+    "sales": 39,
+    "isNew": 1,
+    "isHot": 1,
+    "spec": "3个"
+  }
+]

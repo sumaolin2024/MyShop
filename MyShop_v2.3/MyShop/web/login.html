@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8" />
@@ -579,7 +579,7 @@
             var captchaInput = document.getElementById('captchaInput');
             var loginBtn = document.getElementById('loginBtn');
 
-            loginForm.addEventListener('submit', function(e) {
+            loginForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
 
                 var username = loginUser.value.trim();
@@ -601,16 +601,26 @@
                     return;
                 }
 
-                // 模拟登录
+                // 调用后端登录API
                 loginBtn.classList.add('loading');
-                setTimeout(function() {
+                try {
+                    var resp = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: username, password: password })
+                    });
                     loginBtn.classList.remove('loading');
-                    showToast('✅ 登录成功，欢迎 ' + username + '！');
-                    // 登录成功后跳转回首页
-                    setTimeout(function() {
-                        window.location.href = 'index.html';
-                    }, 600);
-                }, 1500);
+                    var data = await resp.json();
+                    if (data.ok) {
+                        showToast('✅ 登录成功，欢迎 ' + data.user.username + '！');
+                        setTimeout(function() { window.location.href = 'index.html'; }, 600);
+                    } else {
+                        showToast('❌ ' + (data.msg || '登录失败'));
+                    }
+                } catch (err) {
+                    loginBtn.classList.remove('loading');
+                    showToast('❌ 网络错误，请稍后重试');
+                }
             });
 
             // ===== 忘记密码 =====
