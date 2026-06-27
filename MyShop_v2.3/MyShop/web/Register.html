@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>创建账号 — 我的商城</title>
+    <style>
+        /* ===== 与首页/登录页完全一致的变量 ===== */
+        :root {
+            --c-black: #111111;
+            --c-gray: #666666;
+            --c-white: #FFFFFF;
+            --c-red: #FF0000;
+            --c-border: #E5E5E5;
+            --c-bg: #F5F5F5;
+            --c-bg-dark: #1A1A1A;
+            --font: 'Inter', 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+            --max-w: 1200px;
+            --hdr-h: 64px;
+            --trans: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --radius: 4px;
+        }
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+        }
+        body {
+            font-family: var(--font);
+            font-size: 14px;
+            color: var(--c-black);
+            background: var(--c-white);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        button {
+            cursor: pointer;
+            font-family: inherit;
+            border: none;
+            background: none;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+        .container {
+            max-width: var(--max-w);
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ===== 顶部导航（与 login.html 一致） ===== */
+        .site-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            height: var(--hdr-h);
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--c-border);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: var(--hdr-h);
+            max-width: var(--max-w);
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .header-logo {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .header-logo span {
+            color: var(--c-red);
+        }
+        .header-back {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--c-gray);
+            transition: color var(--trans);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .header-back:hover {
+            color: var(--c-black);
+        }
+
+        /* ===== 注册主体（宽度已调整） ===== */
+        .register-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px 60px;
+            background: var(--c-bg);
+            min-height: 100vh;
+        }
+
+        .register-card {
+            display: flex;
+            flex-direction: row;
+            background: var(--c-white);
+            border-radius: var(--radius);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+            width: 100%;
+            max-width: 980px; /* 从 820px 调宽至 980px */
+            min-height: 500px; /* 略微调高以适应更宽的布局 */
+            border: 1px solid var(--c-border);
+            overflow: hidden;
+        }
+
+        /* ---- 左侧图片区（占比略缩，给表单腾空间） ---- */
+        .register-image {
+            flex: 0 0 38%; /* 从 42% 调整为 38% */
+            background: var(--c-bg);
+            background-image: url('https://picsum.photos/seed/register/600/800');
+            background-size: cover;
+            background-position: center;
+            min-height: 320px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .register-image .img-label {
+            color: var(--c-gray);
+            font-size: 13px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 6px 16px;
+            border-radius: var(--radius);
+            border: 1px solid var(--c-border);
+            user-select: none;
+        }
+
+        /* ---- 右侧表单区（内边距同步增加） ---- */
+        .register-form-wrapper {
+            flex: 1;
+            padding: 36px 44px 32px 40px; /* 左右内边距稍增 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .register-form-wrapper .form-header {
+            margin-bottom: 20px;
+        }
+        .register-form-wrapper .form-header h2 {
+            font-size: 26px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            color: var(--c-black);
+        }
+        .register-form-wrapper .form-header .sub {
+            font-size: 14px;
+            color: var(--c-gray);
+            margin-top: 2px;
+        }
+        .register-form-wrapper .form-header .sub a {
+            color: var(--c-black);
+            font-weight: 500;
+            border-bottom: 1px solid var(--c-border);
+        }
+        .register-form-wrapper .form-header .sub a:hover {
+            border-color: var(--c-black);
+        }
+
+        /* 表单元素 */
+        .register-form .form-group {
+            margin-bottom: 14px;
+        }
+        .register-form label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--c-black);
+            margin-bottom: 3px;
+            letter-spacing: 0.3px;
+        }
+        .register-form .input-wrap {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--c-border);
+            border-radius: var(--radius);
+            transition: border-color 0.2s;
+            background: var(--c-white);
+        }
+        .register-form .input-wrap:focus-within {
+            border-color: var(--c-black);
+        }
+        .register-form .input-wrap .icon {
+            padding: 0 8px 0 12px;
+            color: var(--c-gray);
+            font-size: 15px;
+            user-select: none;
+        }
+        .register-form .input-wrap input {
+            width: 100%;
+            border: none;
+            outline: none;
+            padding: 10px 12px 10px 0;
+            font-size: 14px;
+            background: transparent;
+            color: var(--c-black);
+            font-family: var(--font);
+        }
+        .register-form .input-wrap input::placeholder {
+            color: #bbb;
+        }
+
+        /* 密码强度指示器 */
+        .pwd-strength {
+            display: flex;
+            gap: 6px;
+            margin-top: 4px;
+            height: 4px;
+        }
+        .pwd-strength .bar {
+            flex: 1;
+            height: 100%;
+            background: var(--c-border);
+            border-radius: 2px;
+            transition: background 0.3s;
+        }
+        .pwd-strength .bar.active.weak {
+            background: #e74c3c;
+        }
+        .pwd-strength .bar.active.medium {
+            background: #f39c12;
+        }
+        .pwd-strength .bar.active.strong {
+            background: #27ae60;
+        }
+        .pwd-strength-label {
+            font-size: 11px;
+            color: var(--c-gray);
+            margin-top: 2px;
+            height: 18px;
+        }
+
+        /* 验证码 */
+        .captcha-row {
+            display: flex;
+            gap: 10px;
+            align-items: stretch;
+        }
+        .captcha-row .input-wrap {
+            flex: 1;
+        }
+        .captcha-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--c-bg);
+            border: 1px solid var(--c-border);
+            border-radius: var(--radius);
+            padding: 0 14px;
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 5px;
+            color: var(--c-black);
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            user-select: none;
+            min-width: 90px;
+            transition: background 0.2s;
+            position: relative;
+        }
+        .captcha-box:hover {
+            background: #eaeaea;
+        }
+        .captcha-box .refresh-tip {
+            position: absolute;
+            bottom: -18px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 10px;
+            color: var(--c-gray);
+        }
+
+        /* 选项 */
+        .form-options {
+            display: flex;
+            align-items: center;
+            margin: 2px 0 16px;
+            font-size: 13px;
+            color: var(--c-gray);
+        }
+        .form-options label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            color: var(--c-gray);
+            font-weight: 400;
+            font-size: 13px;
+        }
+        .form-options label a {
+            color: var(--c-black);
+            border-bottom: 1px solid var(--c-border);
+        }
+        .form-options label a:hover {
+            border-color: var(--c-black);
+        }
+        .form-options input[type="checkbox"] {
+            accent-color: var(--c-black);
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+        }
+
+        /* 注册按钮 */
+        .register-form .btn-register {
+            width: 100%;
+            padding: 12px;
+            background: var(--c-black);
+            color: var(--c-white);
+            border: none;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: background 0.25s, transform 0.15s;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .register-form .btn-register:hover {
+            background: #000;
+        }
+        .register-form .btn-register:active {
+            transform: scale(0.97);
+        }
+        .register-form .btn-register.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        .register-form .btn-register.loading .btn-text {
+            opacity: 0;
+        }
+        .register-form .btn-register .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            position: absolute;
+        }
+        .register-form .btn-register.loading .spinner {
+            display: block;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .login-entry {
+            text-align: center;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--c-border);
+            font-size: 13px;
+            color: var(--c-gray);
+        }
+        .login-entry a {
+            color: var(--c-black);
+            font-weight: 500;
+            border-bottom: 1px solid var(--c-border);
+        }
+        .login-entry a:hover {
+            border-color: var(--c-black);
+        }
+
+        /* ===== Toast ===== */
+        .toast {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 2000;
+            padding: 12px 24px;
+            border-radius: var(--radius);
+            font-size: 13px;
+            font-weight: 500;
+            animation: slideIn 0.3s ease;
+            display: none;
+            background: var(--c-black);
+            color: var(--c-white);
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* ===== 响应式（移动端保持全宽） ===== */
+        @media (max-width: 768px) {
+            .register-card {
+                flex-direction: column;
+                max-width: 100%;
+                margin: 0 10px;
+                min-height: auto;
+            }
+            .register-image {
+                flex: 0 0 180px;
+                min-height: 160px;
+                border-radius: var(--radius) var(--radius) 0 0;
+            }
+            .register-form-wrapper {
+                padding: 24px 20px 20px;
+            }
+            .register-form-wrapper .form-header {
+                text-align: center;
+            }
+            .register-form-wrapper .form-header h2 {
+                font-size: 22px;
+            }
+            .captcha-box {
+                min-width: 80px;
+                font-size: 18px;
+                padding: 0 10px;
+                letter-spacing: 4px;
+            }
+            .form-options {
+                font-size: 12px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            .register-form .btn-register {
+                font-size: 14px;
+                padding: 11px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .register-image {
+                flex: 0 0 140px;
+                min-height: 120px;
+            }
+            .register-form-wrapper {
+                padding: 18px 14px 16px;
+            }
+            .register-form-wrapper .form-header h2 {
+                font-size: 20px;
+            }
+            .captcha-box {
+                min-width: 70px;
+                font-size: 16px;
+                padding: 0 8px;
+                letter-spacing: 3px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== 顶部导航 ===== -->
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="index.html" class="header-logo">MY<span>SHOP</span></a>
+            <a href="index.html" class="header-back">&#8592; 返回首页</a>
+        </div>
+    </header>
+
+    <!-- ===== 注册主体 ===== -->
+    <main class="register-wrapper">
+        <div class="register-card">
+            <!-- 左侧图片 -->
+            <div class="register-image" style="background-image: url('https://picsum.photos/seed/register/600/800');">
+            </div>
+
+            <!-- 右侧表单 -->
+            <div class="register-form-wrapper">
+                <div class="form-header">
+                    <h2>创建账号</h2>
+                    <div class="sub">已有账号？ <a href="login.html">去登录</a></div>
+                </div>
+
+                <form class="register-form" id="registerForm" autocomplete="off">
+                    <!-- 用户名 -->
+                    <div class="form-group">
+                        <label for="regUser">用户名</label>
+                        <div class="input-wrap">
+                            <span class="icon">👤</span>
+                            <input type="text" id="regUser" placeholder="请设置用户名" />
+                        </div>
+                    </div>
+
+                    <!-- 邮箱 -->
+                    <div class="form-group">
+                        <label for="regEmail">邮箱</label>
+                        <div class="input-wrap">
+                            <span class="icon">✉</span>
+                            <input type="email" id="regEmail" placeholder="请输入邮箱地址" />
+                        </div>
+                    </div>
+
+                    <!-- 密码 -->
+                    <div class="form-group">
+                        <label for="regPass">密码</label>
+                        <div class="input-wrap">
+                            <span class="icon">🔒</span>
+                            <input type="password" id="regPass" placeholder="至少 6 位" />
+                        </div>
+                        <div class="pwd-strength" id="pwdStrength">
+                            <span class="bar"></span>
+                            <span class="bar"></span>
+                            <span class="bar"></span>
+                        </div>
+                        <div class="pwd-strength-label" id="pwdStrengthLabel">&nbsp;</div>
+                    </div>
+
+                    <!-- 确认密码 -->
+                    <div class="form-group">
+                        <label for="regPassConfirm">确认密码</label>
+                        <div class="input-wrap">
+                            <span class="icon">🔐</span>
+                            <input type="password" id="regPassConfirm" placeholder="再次输入密码" />
+                        </div>
+                    </div>
+
+                    <!-- 验证码 -->
+                    <div class="form-group">
+                        <label>验证码</label>
+                        <div class="captcha-row">
+                            <div class="input-wrap">
+                                <span class="icon">✉</span>
+                                <input type="text" id="captchaInput" placeholder="输入验证码" maxlength="4" />
+                            </div>
+                            <div class="captcha-box" id="captchaBox" title="点击刷新验证码">
+                                <span id="captchaText">A7K2</span>
+                                <span class="refresh-tip">↻ 刷新</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 同意条款 -->
+                    <div class="form-options">
+                        <label>
+                            <input type="checkbox" id="agreeTerms" />
+                            我已阅读并同意 <a href="#" id="termsLink">《用户协议》</a>
+                        </label>
+                    </div>
+
+                    <!-- 注册按钮 -->
+                    <button type="submit" class="btn-register" id="registerBtn">
+                        <span class="btn-text">注册</span>
+                        <span class="spinner"></span>
+                    </button>
+
+                    <div class="login-entry">
+                        已有账号？ <a href="login.html">去登录</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- ===== Toast ===== -->
+    <div class="toast" id="toast"></div>
+
+    <!-- ============================================================
+    JavaScript
+    ============================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ===== Toast =====
+            function showToast(msg) {
+                var t = document.getElementById('toast');
+                t.textContent = msg;
+                t.style.display = 'block';
+                setTimeout(function() { t.style.display = 'none'; }, 2000);
+            }
+
+            // ===== 验证码 =====
+            var captchaBox = document.getElementById('captchaBox');
+            var captchaText = document.getElementById('captchaText');
+
+            function generateCaptcha() {
+                var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                var code = '';
+                for (var i = 0; i < 4; i++) {
+                    code += chars[Math.floor(Math.random() * chars.length)];
+                }
+                return code;
+            }
+
+            function refreshCaptcha() {
+                var code = generateCaptcha();
+                captchaText.textContent = code;
+                var colors = ['#111', '#333', '#666', '#000'];
+                captchaText.style.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            captchaBox.addEventListener('click', refreshCaptcha);
+            refreshCaptcha();
+
+            // ===== 密码强度 =====
+            var regPass = document.getElementById('regPass');
+            var pwdBars = document.querySelectorAll('#pwdStrength .bar');
+            var pwdLabel = document.getElementById('pwdStrengthLabel');
+
+            function checkStrength(pwd) {
+                var score = 0;
+                if (pwd.length >= 6) score++;
+                if (pwd.length >= 10) score++;
+                if (/[a-z]/.test(pwd) && /[A-Z]/.test(pwd)) score++;
+                if (/\d/.test(pwd)) score++;
+                if (/[^a-zA-Z0-9]/.test(pwd)) score++;
+                return Math.min(score, 3);
+            }
+
+            regPass.addEventListener('input', function() {
+                var pwd = this.value;
+                var strength = checkStrength(pwd);
+                var labels = ['', '弱', '中', '强'];
+                var classes = ['', 'weak', 'medium', 'strong'];
+
+                pwdBars.forEach(function(bar, idx) {
+                    bar.className = 'bar';
+                    if (idx < strength) {
+                        bar.classList.add('active', classes[strength]);
+                    }
+                });
+                pwdLabel.textContent = pwd.length === 0 ? '\u00A0' : '密码强度：' + labels[strength];
+            });
+
+            // ===== 表单提交 =====
+            var registerForm = document.getElementById('registerForm');
+            var regUser = document.getElementById('regUser');
+            var regEmail = document.getElementById('regEmail');
+            var regPassConfirm = document.getElementById('regPassConfirm');
+            var captchaInput = document.getElementById('captchaInput');
+            var agreeTerms = document.getElementById('agreeTerms');
+            var registerBtn = document.getElementById('registerBtn');
+
+            registerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                var username = regUser.value.trim();
+                var email = regEmail.value.trim();
+                var password = regPass.value;
+                var passwordConfirm = regPassConfirm.value.trim();
+                var captcha = captchaInput.value.trim();
+
+                // 校验
+                if (!username) { alert('请输入用户名');
+                    regUser.focus(); return; }
+                if (username.length < 2) { alert('用户名至少 2 个字符');
+                    regUser.focus(); return; }
+
+                if (!email) { alert('请输入邮箱');
+                    regEmail.focus(); return; }
+                var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRe.test(email)) { alert('请输入有效的邮箱地址');
+                    regEmail.focus(); return; }
+
+                if (!password) { alert('请设置密码');
+                    regPass.focus(); return; }
+                if (password.length < 6) { alert('密码至少 6 位');
+                    regPass.focus(); return; }
+
+                if (!passwordConfirm) { alert('请确认密码');
+                    regPassConfirm.focus(); return; }
+                if (password !== passwordConfirm) { alert('两次输入的密码不一致');
+                    regPassConfirm.focus(); return; }
+
+                if (!captcha) { alert('请输入验证码');
+                    captchaInput.focus(); return; }
+                if (captcha.toUpperCase() !== captchaText.textContent.toUpperCase()) {
+                    alert('验证码错误，请重新输入');
+                    captchaInput.value = '';
+                    refreshCaptcha();
+                    captchaInput.focus();
+                    return;
+                }
+
+                if (!agreeTerms.checked) { alert('请先阅读并同意用户协议');
+                    agreeTerms.focus(); return; }
+
+                // 模拟注册
+                registerBtn.classList.add('loading');
+                setTimeout(function() {
+                    registerBtn.classList.remove('loading');
+                    showToast('🎉 注册成功！欢迎 ' + username + '！');
+                    // 注册成功后跳转到登录页
+                    setTimeout(function() {
+                        window.location.href = 'login.html';
+                    }, 700);
+                }, 1500);
+            });
+
+            // ===== 用户协议链接 =====
+            document.getElementById('termsLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                showToast('📄 打开用户协议（演示）');
+            });
+
+            console.log('✅ 独立注册页面已加载（界面已加宽）');
+        })();
+    </script>
+
+</body>
+</html>

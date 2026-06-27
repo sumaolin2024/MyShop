@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手机数码 — 我的商城</title>
+    <style>
+/* ========================================
+   MyShop Global Design System
+   Palette: #111 / #666 / #FFF / #FF0000
+   Philosophy: Minimalist, Premium, Clean
+   ======================================== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --c-black:    #111111;
+  --c-gray:     #666666;
+  --c-white:    #FFFFFF;
+  --c-red:      #FF0000;
+  --c-border:   #E5E5E5;
+  --c-bg:       #F5F5F5;
+  --c-bg-dark:  #1A1A1A;
+  --font:       'Inter', 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+  --max-w:      1200px;
+  --hdr-h:      64px;
+  --trans:      0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --radius:     4px;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior:smooth; -webkit-font-smoothing:antialiased; }
+body {
+  font-family: var(--font);
+  font-size: 14px;
+  color: var(--c-black);
+  background: var(--c-white);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+a { color:inherit; text-decoration:none; }
+ul, ol { list-style:none; }
+img { max-width:100%; height:auto; display:block; }
+button { cursor:pointer; font-family:inherit; border:none; background:none; }
+input, select, textarea { font-family:inherit; }
+
+.container { max-width:var(--max-w); margin:0 auto; padding:0 20px; }
+
+/* ---- Header ---- */
+.site-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  height: var(--hdr-h); background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--trans), box-shadow var(--trans);
+}
+.site-header.scrolled { border-bottom-color: var(--c-border); box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.header-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  height: var(--hdr-h); max-width: var(--max-w); margin: 0 auto; padding: 0 20px;
+}
+.header-logo { font-size: 22px; font-weight: 700; letter-spacing: 1px; }
+.header-logo span { color: var(--c-red); }
+
+.nav-main { display: flex; gap: 32px; }
+.nav-main a {
+  font-size: 13px; font-weight: 500; letter-spacing: 0.5px;
+  color: var(--c-black); text-transform: uppercase;
+  position: relative; padding: 4px 0; transition: color var(--trans);
+}
+.nav-main a::after {
+  content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1.5px;
+  background: var(--c-black); transition: width var(--trans);
+}
+.nav-main a:hover::after { width: 100%; }
+
+.header-actions { display: flex; align-items: center; gap: 20px; }
+.icon-btn { position: relative; font-size: 18px; color: var(--c-black); transition: color var(--trans); display: flex; align-items: center; }
+.icon-btn:hover { color: var(--c-red); }
+.cart-badge {
+  position: absolute; top: -8px; right: -10px; min-width: 18px; height: 18px;
+  background: var(--c-red); color: var(--c-white); font-size: 10px; font-weight: 600;
+  border-radius: 9px; display: flex; align-items: center; justify-content: center;
+  padding: 0 4px; display: none;
+}
+.cart-badge.show { display: flex; }
+
+/* Mobile hamburger */
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+.hamburger span { display: block; width: 22px; height: 2px; background: var(--c-black); transition: var(--trans); }
+.hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Mobile menu */
+.mobile-nav {
+  display: none; position: fixed; top: var(--hdr-h); left: 0; right: 0;
+  background: var(--c-white); border-bottom: 1px solid var(--c-border);
+  padding: 16px 20px; flex-direction: column; gap: 12px; z-index: 999;
+}
+.mobile-nav.active { display: flex; }
+.mobile-nav a { font-size: 14px; font-weight: 500; padding: 8px 0; border-bottom: 1px solid var(--c-border); }
+
+/* ---- Hero Banner ---- */
+.hero { margin-top: var(--hdr-h); position: relative; overflow:hidden; }
+.hero-slider { display: flex; transition: transform 0.6s cubic-bezier(0.4,0,0.2,1); }
+.hero-slide {
+  min-width: 100%; height: 520px; position: relative;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.hero-slide:nth-child(1) { background: #F5F5F0; }
+.hero-slide:nth-child(2) { background: #F0F0F5; }
+.hero-slide:nth-child(3) { background: #F0F5F0; }
+
+.hero-content { text-align: center; z-index: 2; max-width: 500px; padding: 0 20px; }
+.hero-content h2 { font-size: 48px; font-weight: 300; letter-spacing: 2px; margin-bottom: 16px; color: var(--c-black); }
+.hero-content p { font-size: 16px; color: var(--c-gray); margin-bottom: 32px; line-height: 1.8; }
+.hero-cta {
+  display: inline-block; padding: 14px 48px; font-size: 13px; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase;
+  border: 2px solid var(--c-black); border-radius: 0;
+  transition: all var(--trans); background: transparent; color: var(--c-black);
+}
+.hero-cta:hover { background: var(--c-black); color: var(--c-white); }
+
+.hero-dots { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; z-index: 3; }
+.hero-dot { width: 8px; height: 8px; border-radius: 50%; background: #CCC; cursor: pointer; transition: var(--trans); }
+.hero-dot.active { background: var(--c-black); width: 24px; border-radius: 4px; }
+
+.hero-arrows { position: absolute; top: 50%; transform: translateY(-50%); width: 100%; display: flex; justify-content: space-between; padding: 0 24px; z-index: 3; pointer-events: none; }
+.hero-arrow { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.9); display: flex; align-items: center; justify-content: center; cursor: pointer; pointer-events: auto; transition: var(--trans); font-size: 18px; color: var(--c-black); }
+.hero-arrow:hover { background: var(--c-white); }
+
+/* ---- Section ---- */
+.section { padding: 80px 0; }
+.section-header { text-align: center; margin-bottom: 48px; }
+.section-header h2 { font-size: 28px; font-weight: 500; letter-spacing: 1px; margin-bottom: 8px; }
+.section-header p { font-size: 14px; color: var(--c-gray); }
+
+/* ---- Category Grid ---- */
+.category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.category-card {
+  position: relative; overflow: hidden; border-radius: var(--radius);
+  aspect-ratio: 16/10; cursor: pointer; background: var(--c-bg);
+}
+.category-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+.category-card:hover img { transform: scale(1.05); }
+.category-card-overlay {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 8px;
+  background: rgba(0,0,0,0.15); transition: background var(--trans);
+}
+.category-card:hover .category-card-overlay { background: rgba(0,0,0,0.35); }
+.category-card-overlay h3 { color: #fff; font-size: 20px; font-weight: 500; letter-spacing: 1px; }
+.category-card-overlay span { color: rgba(255,255,255,0.8); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+
+/* ---- Product Card ---- */
+.product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.product-card {
+  position: relative; cursor: pointer; transition: transform var(--trans);
+}
+.product-card:hover { transform: translateY(-4px); }
+.product-card-image {
+  position: relative; overflow: hidden; border-radius: var(--radius);
+  aspect-ratio: 1/1; background: var(--c-bg); margin-bottom: 12px;
+}
+.product-card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+.product-card:hover .product-card-image img { transform: scale(1.05); }
+.product-card-actions {
+  position: absolute; bottom: 12px; right: 12px; display: flex; gap: 8px;
+  opacity: 0; transform: translateY(8px); transition: all var(--trans);
+}
+.product-card:hover .product-card-actions { opacity: 1; transform: translateY(0); }
+.product-card-actions button {
+  width: 36px; height: 36px; border-radius: 50%; background: var(--c-white);
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: var(--trans); color: var(--c-black);
+}
+.product-card-actions button:hover { background: var(--c-black); color: var(--c-white); }
+.product-card-name { font-size: 14px; font-weight: 400; margin-bottom: 6px; }
+.product-card-price { font-size: 15px; font-weight: 600; color: var(--c-red); }
+.product-card-price .original { font-size: 12px; color: #999; text-decoration: line-through; font-weight: 400; margin-left: 8px; }
+.product-card-meta { display: flex; gap: 12px; font-size: 11px; color: var(--c-gray); margin-top: 4px; }
+
+.tag-new {
+  position: absolute; top: 10px; left: 10px; z-index: 2;
+  background: var(--c-black); color: var(--c-white); font-size: 10px;
+  font-weight: 600; padding: 2px 8px; border-radius: 2px; letter-spacing: 0.5px;
+}
+
+/* ---- New Arrivals Scroll ---- */
+.new-scroll { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; }
+.new-scroll::-webkit-scrollbar { height: 4px; }
+.new-scroll::-webkit-scrollbar-thumb { background: #CCC; border-radius: 2px; }
+.new-scroll .product-card { min-width: 260px; scroll-snap-align: start; }
+
+/* ---- Footer ---- */
+.site-footer { background: var(--c-bg-dark); color: #999; padding: 60px 0 30px; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+.footer-col h4 { color: var(--c-white); font-size: 14px; font-weight: 600; margin-bottom: 20px; letter-spacing: 0.5px; }
+.footer-col p { font-size: 13px; line-height: 2; }
+.footer-col a { display: block; font-size: 13px; color: #999; padding: 4px 0; transition: color var(--trans); }
+.footer-col a:hover { color: var(--c-white); }
+.footer-bottom { border-top: 1px solid #333; padding-top: 24px; text-align: center; font-size: 12px; }
+
+/* ---- Pagination ---- */
+.pagination { display: flex; justify-content: center; gap: 4px; margin-top: 40px; }
+.pagination a, .pagination span {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 36px; height: 36px; font-size: 13px; border-radius: var(--radius);
+  border: 1px solid var(--c-border); color: var(--c-black); transition: var(--trans);
+}
+.pagination a:hover { border-color: var(--c-black); }
+.pagination .current { background: var(--c-black); color: var(--c-white); border-color: var(--c-black); }
+.pagination .disabled { color: #CCC; pointer-events: none; }
+
+/* ---- Buttons ---- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px 24px; font-size: 13px; font-weight: 500; letter-spacing: 0.5px;
+  border-radius: var(--radius); transition: all var(--trans);
+}
+.btn-primary { background: var(--c-black); color: var(--c-white); }
+.btn-primary:hover { background: #333; }
+.btn-outline { border: 1px solid var(--c-black); background: transparent; color: var(--c-black); }
+.btn-outline:hover { background: var(--c-black); color: var(--c-white); }
+.btn-danger { background: var(--c-red); color: var(--c-white); }
+.btn-sm { padding: 6px 14px; font-size: 12px; }
+.btn-lg { padding: 14px 48px; font-size: 14px; }
+
+/* ---- Form ---- */
+.form-group { margin-bottom: 20px; }
+.form-label { display: block; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 6px; text-transform: uppercase; color: var(--c-gray); }
+.form-input {
+  width: 100%; padding: 12px 14px; font-size: 14px; border: 1px solid var(--c-border);
+  border-radius: var(--radius); transition: border-color var(--trans); outline: none;
+}
+.form-input:focus { border-color: var(--c-black); }
+
+/* ---- Breadcrumb ---- */
+.breadcrumb { display: flex; gap: 8px; font-size: 12px; color: var(--c-gray); padding: 12px 0; }
+.breadcrumb a:hover { color: var(--c-black); }
+.breadcrumb span { color: var(--c-black); }
+
+/* ---- Toast ---- */
+.toast { position: fixed; top: 80px; right: 20px; z-index: 2000; padding: 12px 24px; border-radius: var(--radius); font-size: 13px; font-weight: 500; animation: slideIn 0.3s ease; display: none; }
+.toast.success { background: var(--c-black); color: var(--c-white); }
+.toast.error { background: var(--c-red); color: var(--c-white); }
+@keyframes slideIn { from { opacity:0; transform:translateX(100%); } to { opacity:1; transform:translateX(0); } }
+
+/* ---- Utility ---- */
+.text-center { text-align:center; }
+.text-gray { color:var(--c-gray); }
+.mt-20 { margin-top:20px; }
+.mb-20 { margin-bottom:20px; }
+.hidden { display:none; }
+
+/* ---- Responsive ---- */
+@media (max-width: 1024px) {
+  .product-grid { grid-template-columns: repeat(3, 1fr); }
+  .category-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+  .nav-main, .header-actions .icon-btn:not(.cart-icon) { display: none; }
+  .hamburger { display: flex; }
+  .product-grid { grid-template-columns: repeat(2, 1fr); }
+  .category-grid { grid-template-columns: 1fr; }
+  .hero-slide { height: 360px; }
+  .hero-content h2 { font-size: 32px; }
+  .hero-arrows { display: none; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .section { padding: 48px 0; }
+  .new-scroll .product-card { min-width: 200px; }
+}
+@media (max-width: 480px) {
+  .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+}
+</style>
+    <style>
+        :root {
+            --c-black: #1d1d1f;
+            --c-gray: #86868b;
+            --c-light: #f5f5f7;
+            --c-white: #ffffff;
+            --c-accent: #0071e3;
+        }
+        /* Page-level overrides for Apple-like feel */
+        body { background: #fff; color: var(--c-black); font-family: 'Inter', 'PingFang SC', 'SF Pro Display', -apple-system, sans-serif; }
+
+        /* ---- Hero ---- */
+        .mobile-hero {
+            margin-top: var(--hdr-h);
+            background: #fff;
+            color: var(--c-black);
+            text-align: center;
+            padding: 80px 20px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        .mobile-hero h1 {
+            font-size: 56px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            line-height: 1.1;
+        }
+        .mobile-hero .subtitle {
+            font-size: 28px;
+            font-weight: 400;
+            color: var(--c-gray);
+            margin-bottom: 24px;
+        }
+        .mobile-hero .price-tag {
+            font-size: 17px;
+            color: #86868b;
+            margin-bottom: 28px;
+        }
+        .mobile-hero .hero-cta-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .mobile-hero .btn-blue {
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: 980px;
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 0;
+            background: var(--c-accent);
+            color: #fff;
+            transition: background 0.2s;
+        }
+        .mobile-hero .btn-blue:hover { background: #0066cc; }
+        .mobile-hero .btn-outline-white {
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: 980px;
+            font-size: 15px;
+            font-weight: 500;
+            border: 1px solid var(--c-black);
+            color: var(--c-black);
+            background: transparent;
+            transition: all 0.2s;
+        }
+        .mobile-hero .btn-outline-white:hover { background: var(--c-black); color: #fff; }
+
+        .mobile-hero .hero-image {
+            margin-top: 40px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .mobile-hero .hero-image img {
+            width: 100%;
+            height: auto;
+        }
+
+        /* ---- Product Cards (alternating layout) ---- */
+        .product-showcase {
+            padding: 100px 0;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .product-showcase-item {
+            display: flex;
+            align-items: center;
+            gap: 80px;
+            padding: 80px 20px;
+            border-bottom: 1px solid #e5e5e7;
+        }
+        .product-showcase-item:last-child { border-bottom: none; }
+        .product-showcase-item.reverse { flex-direction: row-reverse; }
+
+        .product-showcase-image {
+            flex: 1;
+            text-align: center;
+        }
+        .product-showcase-image > img {
+            transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1),
+                        box-shadow 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+            border-radius: 8px;
+        }
+        .product-showcase-image > img:hover {
+            transform: scale(1.04);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+        }
+        .product-showcase-image img {
+            max-width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+        }
+        .product-showcase-text {
+            flex: 1;
+        }
+        .product-showcase-text .eyebrow {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--c-gray);
+            margin-bottom: 8px;
+        }
+        .product-showcase-text h2 {
+            font-size: 40px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            line-height: 1.15;
+        }
+        .product-showcase-text .tagline {
+            font-size: 21px;
+            font-weight: 400;
+            color: var(--c-gray);
+            margin-bottom: 16px;
+        }
+        .product-showcase-text .price {
+            font-size: 17px;
+            color: var(--c-gray);
+            margin-bottom: 20px;
+        }
+        .product-showcase-text .btn-sm {
+            display: inline-block;
+            padding: 10px 22px;
+            border-radius: 980px;
+            font-size: 14px;
+            font-weight: 500;
+            background: var(--c-accent);
+            color: #fff;
+            transition: background 0.2s;
+        }
+        .product-showcase-text .btn-sm:hover { background: #0066cc; }
+
+        /* ---- Gallery strip ---- */
+        .gallery-strip {
+            display: flex;
+            gap: 6px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+        .gallery-strip img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border 0.2s, transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+        .gallery-strip img:hover, .gallery-strip img.active { border-color: var(--c-accent); }
+        .gallery-strip img:hover { transform: scale(1.12); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+
+        /* ---- Compare table ---- */
+        .compare-section {
+            padding: 80px 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .compare-section h2 {
+            text-align: center;
+            font-size: 40px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin-bottom: 48px;
+        }
+        .compare-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+        .compare-card {
+            background: var(--c-light);
+            border-radius: 18px;
+            padding: 32px 24px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .compare-card:hover { transform: translateY(-4px); }
+        .compare-card img {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            margin-bottom: 16px;
+        }
+        .compare-card h3 { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+        .compare-card .price { font-size: 14px; color: var(--c-gray); margin-bottom: 12px; }
+        .compare-card .btn-sm {
+            display: inline-block;
+            padding: 8px 18px;
+            border-radius: 980px;
+            font-size: 13px;
+            font-weight: 500;
+            background: var(--c-accent);
+            color: #fff;
+        }
+
+        /* ---- Stagger entrance animation ---- */
+        .product-showcase-item {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s cubic-bezier(0.25, 0.1, 0.25, 1),
+                        transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+        .product-showcase-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* ---- Responsive ---- */
+        @media (max-width: 768px) {
+            .mobile-hero h1 { font-size: 40px; }
+            .mobile-hero .subtitle { font-size: 21px; }
+            .product-showcase-item { flex-direction: column !important; gap: 32px; padding: 48px 20px; }
+            .product-showcase-text h2 { font-size: 32px; }
+            .product-showcase-text .tagline { font-size: 17px; }
+            .compare-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 480px) {
+            .mobile-hero h1 { font-size: 32px; }
+            .compare-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== 顶部导航 ===== -->
+<header class="site-header" id="siteHeader">
+    <div class="header-inner">
+        <a href="index.html" class="header-logo">MY<span>SHOP</span></a>
+        <nav class="nav-main" id="navMain">
+            <a href="index.html">首页</a>
+            <a href="index.html">商城</a>
+            <a href="index.html#section-hot">热销</a>
+            <a href="index.html#section-new">新品</a>
+        </nav>
+        <div class="header-actions">
+            <a href="login.html" class="icon-btn" title="登录">&#x1F464;</a>
+            <a href="shopping%20cart.html" class="icon-btn cart-icon" title="购物车">&#x1F6D2;
+                <span class="cart-badge " id="cartBadge"></span>
+            </a>
+            <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </div>
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="index.html">首页</a>
+        <a href="index.html">商城</a>
+        <a href="index.html#section-hot">热销</a>
+        <a href="index.html#section-new">新品</a>
+        <a href="login.html">登录</a>
+        <a href="Register.html">注册</a>
+    </nav>
+</header>
+
+<!-- ====== 主视觉 ====== -->
+<section class="mobile-hero">
+    <h1>iPhone 17 Pro</h1>
+    <div class="subtitle">钛金属 · 强悍芯</div>
+    <div class="price-tag">¥10,999 起</div>
+    <div class="hero-cta-group">
+        <a href="#" class="btn-blue">立即购买</a>
+        <a href="#showcase" class="btn-outline-white">了解更多 ↓</a>
+    </div>
+    <div class="hero-image">
+        <img src="static/image/mobile/iPhone17Pro/first/微信图片_20260625143833_361_556.jpg" alt="iPhone 17 Pro">
+    </div>
+</section>
+
+<!-- ====== 产品展示 ====== -->
+<div id="showcase" class="product-showcase">
+
+    <!-- iPhone 17 Pro -->
+    <div class="product-showcase-item">
+        <div class="product-showcase-image">
+            <img src="static/image/mobile/iPhone17Pro/product/微信图片_20260625143829_356_556.jpg" alt="iPhone 17 Pro">
+            <div class="gallery-strip">
+                <img src="static/image/mobile/iPhone17Pro/product/微信图片_20260625143829_356_556.jpg" class="active">
+                <img src="static/image/mobile/iPhone17Pro/product/微信图片_20260625143830_357_556.jpg">
+                <img src="static/image/mobile/iPhone17Pro/product/微信图片_20260625143831_358_556.jpg">
+            </div>
+        </div>
+        <div class="product-showcase-text">
+            <div class="eyebrow">iPhone 17 Pro</div>
+            <h2>A17 Pro 芯片<br>破纪录的性能</h2>
+            <div class="tagline">钛金属设计，迄今最轻的 Pro 机型</div>
+            <div class="price">¥10,999 起</div>
+            <a href="#" class="btn-sm">立即购买</a>
+        </div>
+    </div>
+
+    <!-- iPhone Air -->
+    <div class="product-showcase-item reverse">
+        <div class="product-showcase-image">
+            <img src="static/image/mobile/iPhone Air/product/微信图片_20260625143825_350_556.jpg" alt="iPhone Air">
+            <div class="gallery-strip">
+                <img src="static/image/mobile/iPhone Air/product/微信图片_20260625143825_350_556.jpg" class="active">
+                <img src="static/image/mobile/iPhone Air/product/微信图片_20260625143825_351_556.jpg">
+                <img src="static/image/mobile/iPhone Air/product/微信图片_20260625143826_352_556.jpg">
+                <img src="static/image/mobile/iPhone Air/product/微信图片_20260625143828_355_556.jpg">
+            </div>
+        </div>
+        <div class="product-showcase-text">
+            <div class="eyebrow">iPhone Air</div>
+            <h2>轻盈<br>再定义</h2>
+            <div class="tagline">极致轻薄，随身无感。全天续航，随心所欲</div>
+            <div class="price">¥5,999 起</div>
+            <a href="#" class="btn-sm">立即购买</a>
+        </div>
+    </div>
+
+    <!-- vivo x300 Pro -->
+    <div class="product-showcase-item reverse">
+        <div class="product-showcase-image">
+            <img src="static/image/mobile/vivo x300 Pro/first/屏幕截图 2026-06-26 104321.png" alt="vivo x300 Pro">
+        </div>
+        <div class="product-showcase-text">
+            <div class="eyebrow">vivo x300 Pro</div>
+            <h2>蔡司加持<br>人像大师</h2>
+            <div class="tagline">专业人像镜头，每一拍都是大片</div>
+            <div class="price">¥5,999 起</div>
+            <a href="#" class="btn-sm">立即购买</a>
+        </div>
+    </div>
+
+    <!-- HUAWEI Pura 80 -->
+    <div class="product-showcase-item">
+        <div class="product-showcase-image">
+            <img src="static/image/mobile/HUAWEI Pura 80/product/微信图片_20260625143837_367_556.jpg" alt="HUAWEI Pura 80">
+            <div class="gallery-strip">
+                <img src="static/image/mobile/HUAWEI Pura 80/product/微信图片_20260625143837_367_556.jpg" class="active">
+                <img src="static/image/mobile/HUAWEI Pura 80/product/微信图片_20260625143838_368_556.jpg">
+                <img src="static/image/mobile/HUAWEI Pura 80/product/微信图片_20260625143839_370_556.jpg">
+            </div>
+        </div>
+        <div class="product-showcase-text">
+            <div class="eyebrow">HUAWEI Pura 80</div>
+            <h2>影像旗舰<br>所见即所得</h2>
+            <div class="tagline">XMAGE 影像系统，重新定义移动摄影</div>
+            <div class="price">¥4,999 起</div>
+            <a href="#" class="btn-sm">立即购买</a>
+        </div>
+    </div>
+
+    <!-- TWS Neo -->
+    <div class="product-showcase-item">
+        <div class="product-showcase-image">
+            <img src="static/image/mobile/TWS Neo/first/屏幕截图 2026-06-26 104525.png" alt="TWS Neo">
+        </div>
+        <div class="product-showcase-text">
+            <div class="eyebrow">VIVO TWS Neo</div>
+            <h2>沉浸式音频<br>无界聆听</h2>
+            <div class="tagline">主动降噪 · 空间音频 · 30 小时续航</div>
+            <div class="price">¥699</div>
+            <a href="#" class="btn-sm">立即购买</a>
+        </div>
+    </div>
+</div>
+
+<!-- ====== 选择你的设备 ====== -->
+<section class="compare-section">
+    <h2>选择你的设备</h2>
+    <div class="compare-grid">
+        <div class="compare-card">
+            <img src="static/image/mobile/iPhone17Pro/first/微信图片_20260625143833_361_556.jpg" alt="iPhone 17 Pro">
+            <h3>iPhone 17 Pro</h3>
+            <div class="price">¥10,999 起</div>
+            <a href="#" class="btn-sm">立即购买</a>
+        </div>
+        <div class="compare-card">
+            <img src="static/image/mobile/iPhone Air/first/微信图片_20260625143824_349_556.jpg" alt="iPhone Air">
+            <h3>iPhone Air</h3>
+            <div class="price">¥5,999 起</div>
+            <a href="#" class="btn-sm">立即购买</a>
+        </div>
+        <div class="compare-card">
+            <img src="static/image/mobile/HUAWEI Pura 80/first/微信图片_20260625143838_369_556.jpg" alt="HUAWEI Pura 80">
+            <h3>HUAWEI Pura 80</h3>
+            <div class="price">¥4,999 起</div>
+            <a href="#" class="btn-sm">立即购买</a>
+        </div>
+        <div class="compare-card">
+            <img src="static/image/mobile/vivo x300 Pro/first/屏幕截图 2026-06-26 104321.png" alt="vivo x300 Pro">
+            <h3>vivo x300 Pro</h3>
+            <div class="price">¥5,999 起</div>
+            <a href="#" class="btn-sm">立即购买</a>
+        </div>
+        <div class="compare-card">
+            <img src="static/image/mobile/TWS Neo/first/屏幕截图 2026-06-26 104525.png" alt="TWS Neo">
+            <h3>VIVO TWS Neo</h3>
+            <div class="price">¥699</div>
+            <a href="#" class="btn-sm">立即购买</a>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 页脚 ===== -->
+<footer class="site-footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>MYSHOP</h4>
+                <p>用心打造的现代电商平台，提供优质产品和卓越服务</p>
+            </div>
+            <div class="footer-col">
+                <h4>购物</h4>
+                <a href="mobile.html">手机数码</a>
+                <a href="fashion.html">时尚</a>
+                <a href="index.html">食品饮料</a>
+                <a href="index.html">珠宝配饰</a>
+            </div>
+            <div class="footer-col">
+                <h4>关于</h4>
+                <a href="#">品牌故事</a>
+                <a href="#">加入我们</a>
+                <a href="#">新闻中心</a>
+                <a href="#">可持续发展</a>
+            </div>
+            <div class="footer-col">
+                <h4>支持</h4>
+                <a href="#">帮助中心</a>
+                <a href="#">配送说明</a>
+                <a href="#">退换政策</a>
+                <a href="#">联系我们</a>
+            </div>
+            <div class="footer-col">
+                <h4>法律</h4>
+                <a href="#">服务条款</a>
+                <a href="#">隐私政策</a>
+                <a href="#">Cookie 政策</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 MyShop. 保留所有权利。
+        </div>
+    </div>
+</footer>
+
+<script>
+// 画廊图片切换
+document.querySelectorAll('.gallery-strip').forEach(function(strip) {
+    var images = strip.querySelectorAll('img');
+    var displayImg = strip.parentElement.querySelector('.product-showcase-image > img');
+    images.forEach(function(img) {
+        img.addEventListener('click', function() {
+            displayImg.src = this.src;
+            images.forEach(function(i) { i.classList.remove('active'); });
+            this.classList.add('active');
+        });
+    });
+});
+</script>
+
+<script>
+// 滚动进入动画
+(function() {
+    var items = document.querySelectorAll('.product-showcase-item');
+    items.forEach(function(item, i) {
+        item.style.transitionDelay = (i * 0.15) + 's';
+    });
+    
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.12 });
+
+    items.forEach(function(item) { observer.observe(item); });
+})();
+</script>
+
+<script>
+// 汉堡菜单切换
+function toggleMenu() {
+    var hamburger = document.getElementById('hamburger');
+    var mobileNav = document.getElementById('mobileNav');
+    hamburger.classList.toggle('active');
+    mobileNav.classList.toggle('active');
+}
+</script>
+
+</body>
+</html>

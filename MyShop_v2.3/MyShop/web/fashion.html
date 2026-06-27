@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyShop — 潮流服饰</title>
+    <style>
+/* ========================================
+   MyShop Global Design System
+   Palette: #111 / #666 / #FFF / #FF0000
+   Philosophy: Minimalist, Premium, Clean
+   ======================================== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --c-black:    #111111;
+  --c-gray:     #666666;
+  --c-white:    #FFFFFF;
+  --c-red:      #FF0000;
+  --c-border:   #E5E5E5;
+  --c-bg:       #F5F5F5;
+  --c-bg-dark:  #1A1A1A;
+  --font:       'Inter', 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+  --max-w:      1200px;
+  --hdr-h:      64px;
+  --trans:      0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --radius:     4px;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior:smooth; -webkit-font-smoothing:antialiased; }
+body {
+  font-family: var(--font);
+  font-size: 14px;
+  color: var(--c-black);
+  background: var(--c-white);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+a { color:inherit; text-decoration:none; }
+ul, ol { list-style:none; }
+img { max-width:100%; height:auto; display:block; }
+button { cursor:pointer; font-family:inherit; border:none; background:none; }
+input, select, textarea { font-family:inherit; }
+
+.container { max-width:var(--max-w); margin:0 auto; padding:0 20px; }
+
+/* ---- Header ---- */
+.site-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  height: var(--hdr-h); background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--trans), box-shadow var(--trans);
+}
+.site-header.scrolled { border-bottom-color: var(--c-border); box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.header-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  height: var(--hdr-h); max-width: var(--max-w); margin: 0 auto; padding: 0 20px;
+}
+.header-logo { font-size: 22px; font-weight: 700; letter-spacing: 1px; }
+.header-logo span { color: var(--c-red); }
+
+.nav-main { display: flex; gap: 32px; }
+.nav-main a {
+  font-size: 13px; font-weight: 500; letter-spacing: 0.5px;
+  color: var(--c-black); text-transform: uppercase;
+  position: relative; padding: 4px 0; transition: color var(--trans);
+}
+.nav-main a::after {
+  content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1.5px;
+  background: var(--c-black); transition: width var(--trans);
+}
+.nav-main a:hover::after { width: 100%; }
+
+.header-actions { display: flex; align-items: center; gap: 20px; }
+.icon-btn { position: relative; font-size: 18px; color: var(--c-black); transition: color var(--trans); display: flex; align-items: center; }
+.icon-btn:hover { color: var(--c-red); }
+.cart-badge {
+  position: absolute; top: -8px; right: -10px; min-width: 18px; height: 18px;
+  background: var(--c-red); color: var(--c-white); font-size: 10px; font-weight: 600;
+  border-radius: 9px; display: flex; align-items: center; justify-content: center;
+  padding: 0 4px; display: none;
+}
+.cart-badge.show { display: flex; }
+
+/* Mobile hamburger */
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+.hamburger span { display: block; width: 22px; height: 2px; background: var(--c-black); transition: var(--trans); }
+.hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Mobile menu */
+.mobile-nav {
+  display: none; position: fixed; top: var(--hdr-h); left: 0; right: 0;
+  background: var(--c-white); border-bottom: 1px solid var(--c-border);
+  padding: 16px 20px; flex-direction: column; gap: 12px; z-index: 999;
+}
+.mobile-nav.active { display: flex; }
+.mobile-nav a { font-size: 14px; font-weight: 500; padding: 8px 0; border-bottom: 1px solid var(--c-border); }
+
+/* ---- Hero Banner ---- */
+.hero { margin-top: var(--hdr-h); position: relative; overflow:hidden; }
+.hero-slider { display: flex; transition: transform 0.6s cubic-bezier(0.4,0,0.2,1); }
+.hero-slide {
+  min-width: 100%; height: 520px; position: relative;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.hero-slide:nth-child(1) { background: #F5F5F0; }
+.hero-slide:nth-child(2) { background: #F0F0F5; }
+.hero-slide:nth-child(3) { background: #F0F5F0; }
+
+.hero-content { text-align: center; z-index: 2; max-width: 500px; padding: 0 20px; }
+.hero-content h2 { font-size: 48px; font-weight: 300; letter-spacing: 2px; margin-bottom: 16px; color: var(--c-black); }
+.hero-content p { font-size: 16px; color: var(--c-gray); margin-bottom: 32px; line-height: 1.8; }
+.hero-cta {
+  display: inline-block; padding: 14px 48px; font-size: 13px; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase;
+  border: 2px solid var(--c-black); border-radius: 0;
+  transition: all var(--trans); background: transparent; color: var(--c-black);
+}
+.hero-cta:hover { background: var(--c-black); color: var(--c-white); }
+
+.hero-dots { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; z-index: 3; }
+.hero-dot { width: 8px; height: 8px; border-radius: 50%; background: #CCC; cursor: pointer; transition: var(--trans); }
+.hero-dot.active { background: var(--c-black); width: 24px; border-radius: 4px; }
+
+.hero-arrows { position: absolute; top: 50%; transform: translateY(-50%); width: 100%; display: flex; justify-content: space-between; padding: 0 24px; z-index: 3; pointer-events: none; }
+.hero-arrow { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.9); display: flex; align-items: center; justify-content: center; cursor: pointer; pointer-events: auto; transition: var(--trans); font-size: 18px; color: var(--c-black); }
+.hero-arrow:hover { background: var(--c-white); }
+
+/* ---- Section ---- */
+.section { padding: 80px 0; }
+.section-header { text-align: center; margin-bottom: 48px; }
+.section-header h2 { font-size: 28px; font-weight: 500; letter-spacing: 1px; margin-bottom: 8px; }
+.section-header p { font-size: 14px; color: var(--c-gray); }
+
+/* ---- Category Grid ---- */
+.category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.category-card {
+  position: relative; overflow: hidden; border-radius: var(--radius);
+  aspect-ratio: 16/10; cursor: pointer; background: var(--c-bg);
+}
+.category-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+.category-card:hover img { transform: scale(1.05); }
+.category-card-overlay {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 8px;
+  background: rgba(0,0,0,0.15); transition: background var(--trans);
+}
+.category-card:hover .category-card-overlay { background: rgba(0,0,0,0.35); }
+.category-card-overlay h3 { color: #fff; font-size: 20px; font-weight: 500; letter-spacing: 1px; }
+.category-card-overlay span { color: rgba(255,255,255,0.8); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+
+/* ---- Product Card ---- */
+.product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.product-card {
+  position: relative; cursor: pointer; transition: transform var(--trans);
+}
+.product-card:hover { transform: translateY(-4px); }
+.product-card-image {
+  position: relative; overflow: hidden; border-radius: var(--radius);
+  aspect-ratio: 1/1; background: var(--c-bg); margin-bottom: 12px;
+}
+.product-card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+.product-card:hover .product-card-image img { transform: scale(1.05); }
+.product-card-actions {
+  position: absolute; bottom: 12px; right: 12px; display: flex; gap: 8px;
+  opacity: 0; transform: translateY(8px); transition: all var(--trans);
+}
+.product-card:hover .product-card-actions { opacity: 1; transform: translateY(0); }
+.product-card-actions button {
+  width: 36px; height: 36px; border-radius: 50%; background: var(--c-white);
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: var(--trans); color: var(--c-black);
+}
+.product-card-actions button:hover { background: var(--c-black); color: var(--c-white); }
+.product-card-name { font-size: 14px; font-weight: 400; margin-bottom: 6px; }
+.product-card-price { font-size: 15px; font-weight: 600; color: var(--c-red); }
+.product-card-price .original { font-size: 12px; color: #999; text-decoration: line-through; font-weight: 400; margin-left: 8px; }
+.product-card-meta { display: flex; gap: 12px; font-size: 11px; color: var(--c-gray); margin-top: 4px; }
+
+.tag-new {
+  position: absolute; top: 10px; left: 10px; z-index: 2;
+  background: var(--c-black); color: var(--c-white); font-size: 10px;
+  font-weight: 600; padding: 2px 8px; border-radius: 2px; letter-spacing: 0.5px;
+}
+
+/* ---- New Arrivals Scroll ---- */
+.new-scroll { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; }
+.new-scroll::-webkit-scrollbar { height: 4px; }
+.new-scroll::-webkit-scrollbar-thumb { background: #CCC; border-radius: 2px; }
+.new-scroll .product-card { min-width: 260px; scroll-snap-align: start; }
+
+/* ---- Footer ---- */
+.site-footer { background: var(--c-bg-dark); color: #999; padding: 60px 0 30px; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+.footer-col h4 { color: var(--c-white); font-size: 14px; font-weight: 600; margin-bottom: 20px; letter-spacing: 0.5px; }
+.footer-col p { font-size: 13px; line-height: 2; }
+.footer-col a { display: block; font-size: 13px; color: #999; padding: 4px 0; transition: color var(--trans); }
+.footer-col a:hover { color: var(--c-white); }
+.footer-bottom { border-top: 1px solid #333; padding-top: 24px; text-align: center; font-size: 12px; }
+
+/* ---- Pagination ---- */
+.pagination { display: flex; justify-content: center; gap: 4px; margin-top: 40px; }
+.pagination a, .pagination span {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 36px; height: 36px; font-size: 13px; border-radius: var(--radius);
+  border: 1px solid var(--c-border); color: var(--c-black); transition: var(--trans);
+}
+.pagination a:hover { border-color: var(--c-black); }
+.pagination .current { background: var(--c-black); color: var(--c-white); border-color: var(--c-black); }
+.pagination .disabled { color: #CCC; pointer-events: none; }
+
+/* ---- Buttons ---- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px 24px; font-size: 13px; font-weight: 500; letter-spacing: 0.5px;
+  border-radius: var(--radius); transition: all var(--trans);
+}
+.btn-primary { background: var(--c-black); color: var(--c-white); }
+.btn-primary:hover { background: #333; }
+.btn-outline { border: 1px solid var(--c-black); background: transparent; color: var(--c-black); }
+.btn-outline:hover { background: var(--c-black); color: var(--c-white); }
+.btn-danger { background: var(--c-red); color: var(--c-white); }
+.btn-sm { padding: 6px 14px; font-size: 12px; }
+.btn-lg { padding: 14px 48px; font-size: 14px; }
+
+/* ---- Form ---- */
+.form-group { margin-bottom: 20px; }
+.form-label { display: block; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 6px; text-transform: uppercase; color: var(--c-gray); }
+.form-input {
+  width: 100%; padding: 12px 14px; font-size: 14px; border: 1px solid var(--c-border);
+  border-radius: var(--radius); transition: border-color var(--trans); outline: none;
+}
+.form-input:focus { border-color: var(--c-black); }
+
+/* ---- Breadcrumb ---- */
+.breadcrumb { display: flex; gap: 8px; font-size: 12px; color: var(--c-gray); padding: 12px 0; }
+.breadcrumb a:hover { color: var(--c-black); }
+.breadcrumb span { color: var(--c-black); }
+
+/* ---- Toast ---- */
+.toast { position: fixed; top: 80px; right: 20px; z-index: 2000; padding: 12px 24px; border-radius: var(--radius); font-size: 13px; font-weight: 500; animation: slideIn 0.3s ease; display: none; }
+.toast.success { background: var(--c-black); color: var(--c-white); }
+.toast.error { background: var(--c-red); color: var(--c-white); }
+@keyframes slideIn { from { opacity:0; transform:translateX(100%); } to { opacity:1; transform:translateX(0); } }
+
+/* ---- Utility ---- */
+.text-center { text-align:center; }
+.text-gray { color:var(--c-gray); }
+.mt-20 { margin-top:20px; }
+.mb-20 { margin-bottom:20px; }
+.hidden { display:none; }
+
+/* ---- Responsive ---- */
+@media (max-width: 1024px) {
+  .product-grid { grid-template-columns: repeat(3, 1fr); }
+  .category-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+  .nav-main, .header-actions .icon-btn:not(.cart-icon) { display: none; }
+  .hamburger { display: flex; }
+  .product-grid { grid-template-columns: repeat(2, 1fr); }
+  .category-grid { grid-template-columns: 1fr; }
+  .hero-slide { height: 360px; }
+  .hero-content h2 { font-size: 32px; }
+  .hero-arrows { display: none; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .section { padding: 48px 0; }
+  .new-scroll .product-card { min-width: 200px; }
+}
+@media (max-width: 480px) {
+  .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+}
+</style>
+    <style>
+        :root {
+            --c-black: #1d1d1f;
+            --c-gray: #86868b;
+            --c-light: #f5f5f7;
+            --c-white: #ffffff;
+            --c-accent: #0071e3;
+        }
+        /* Page-level overrides for Apple-like feel */
+        body { background: #fff; color: var(--c-black); font-family: 'Inter', 'PingFang SC', 'SF Pro Display', -apple-system, sans-serif; }
+
+        /* ---- Hero ---- */
+        .mobile-hero {
+            margin-top: var(--hdr-h);
+            background: #fff;
+            color: var(--c-black);
+            text-align: center;
+            padding: 80px 20px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        .mobile-hero h1 {
+            font-size: 56px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            line-height: 1.1;
+        }
+        .mobile-hero .subtitle {
+            font-size: 28px;
+            font-weight: 400;
+            color: var(--c-gray);
+            margin-bottom: 24px;
+        }
+        .mobile-hero .price-tag {
+            font-size: 17px;
+            color: #86868b;
+            margin-bottom: 28px;
+        }
+        .mobile-hero .hero-cta-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .mobile-hero .btn-blue {
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: 980px;
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 0;
+            background: var(--c-accent);
+            color: var(--c-black);
+            transition: background 0.2s;
+        }
+        .mobile-hero .btn-blue:hover { background: #0066cc; }
+        .mobile-hero .btn-outline-black { color: var(--c-black);
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: 980px;
+            font-size: 15px;
+            font-weight: 500;
+            border: 1px solid var(--c-black);
+            color: var(--c-accent);
+            background: transparent;
+            transition: all 0.2s;
+        }
+        .mobile-hero .btn-outline-black:hover { background: var(--c-accent); color: var(--c-black); }
+
+        .mobile-hero .hero-image {
+            margin-top: 40px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .mobile-hero .hero-image img {
+            width: 100%;
+            height: auto;
+        }
+
+        /* ---- Product Cards (alternating layout) ---- */
+        .product-showcase {
+            padding: 100px 0;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .product-showcase-item {
+            display: flex;
+            align-items: center;
+            gap: 80px;
+            padding: 80px 20px;
+            border-bottom: 1px solid #e5e5e7;
+        }
+        .product-showcase-item:last-child { border-bottom: none; }
+        .product-showcase-item.reverse { flex-direction: row-reverse; }
+
+        .product-showcase-image {
+            flex: 1;
+            text-align: center;
+        }
+                .product-showcase-image > img {
+            transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1),
+                        box-shadow 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+            border-radius: 8px;
+        }
+        .product-showcase-image > img:hover {
+            transform: scale(1.04);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+        }
+        .product-showcase-image img {
+            max-width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+        }
+        .product-showcase-text {
+            flex: 1;
+        }
+        .product-showcase-text .eyebrow {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--c-gray);
+            margin-bottom: 8px;
+        }
+        .product-showcase-text h2 {
+            font-size: 40px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            line-height: 1.15;
+        }
+        .product-showcase-text .tagline {
+            font-size: 21px;
+            font-weight: 400;
+            color: var(--c-gray);
+            margin-bottom: 16px;
+        }
+        .product-showcase-text .price {
+            font-size: 17px;
+            color: var(--c-gray);
+            margin-bottom: 20px;
+        }
+
+        /* ---- Gallery Strip ---- */
+        .gallery-strip {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .gallery-strip img {
+            width: 56px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        .gallery-strip img.active,
+        .gallery-strip img:hover {
+            border-color: var(--c-accent);
+        }
+
+        /* ---- Entrance Animation ---- */
+        .product-showcase-item {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .product-showcase-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ---- Compare Grid ---- */
+        .compare-section {
+            padding: 80px 20px;
+            background: #f5f5f7;
+        }
+        .compare-section h2 {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 500;
+            margin-bottom: 40px;
+        }
+        .compare-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .compare-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            flex: 0 0 calc(25% - 20px);
+            min-width: 180px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .compare-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        }
+        .compare-card img {
+            width: 100%;
+            max-height: 160px;
+            object-fit: contain;
+            margin-bottom: 16px;
+        }
+        .compare-card h3 {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        .compare-card .price {
+            font-size: 14px;
+            color: var(--c-gray);
+            margin-bottom: 16px;
+        }
+
+        .btn-sm {
+            display: inline-block;
+            padding: 8px 18px;
+            border-radius: 980px;
+            font-size: 12px;
+            font-weight: 500;
+            background: var(--c-accent);
+            color: #fff;
+            transition: background 0.2s;
+            text-decoration: none;
+        }
+        .btn-sm:hover { background: #0066cc; }
+
+        @media (max-width: 768px) {
+            .mobile-hero h1 { font-size: 32px; }
+            .mobile-hero .subtitle { font-size: 18px; }
+            .product-showcase-item {
+                flex-direction: column !important;
+                gap: 32px;
+                padding: 40px 20px;
+            }
+            .product-showcase-text h2 { font-size: 28px; }
+            .product-showcase-text .tagline { font-size: 16px; }
+            .compare-card { flex: 0 0 calc(50% - 10px); }
+        }
+    </style>
+</head>
+<body>
+
+<header class="site-header" id="siteHeader">
+    <div class="header-inner">
+        <a href="index.html" class="header-logo">MY<span>SHOP</span></a>
+        <nav class="nav-main" id="navMain">
+            <a href="index.html">首页</a>
+            <a href="index.html#section-categories">商城</a>
+            <a href="index.html#section-hot">热销</a>
+            <a href="index.html#section-new">新品</a>
+        </nav>
+        <div class="header-actions">
+            <a href="login.html" class="icon-btn" title="登录">&#x1F464;</a>
+            <a href="shopping%20cart.html" class="icon-btn cart-icon" title="购物车">&#x1F6D2;
+                <span class="cart-badge " id="cartBadge"></span>
+            </a>
+            <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </div>
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="index.html">首页</a>
+        <a href="index.html#section-categories">商城</a>
+        <a href="index.html#section-hot">热销</a>
+        <a href="index.html#section-new">新品</a>
+        <a href="login.html">登录</a>
+        <a href="Register.html">注册</a>
+    </nav>
+</header>
+
+<!-- ====== Hero ====== -->
+<section class="mobile-hero">
+    <h1>潮流服饰</h1>
+    <div class="subtitle">穿出你的风格，定义你的态度</div>
+    <div class="price-tag">当季新品 · 限量发售</div>
+    <div class="hero-cta-group">
+        <a href="#showcase" class="btn-blue">探索系列</a>
+        <a href="#showcase" class="btn-outline-black">了解更多</a>
+    </div>
+    <div class="hero-image" style="display:none;"></div>
+</section>
+
+<!-- ====== Product Showcase ====== -->
+<div id="showcase" class="product-showcase">
+
+    <!-- 气质女人 (reverse) -->
+    <div class="product-showcase-item reverse">
+        <div class="product-showcase-image">
+            <img src="static/image/fashion/气质女人/frist/微信图片_20260625143725_271_556.jpg" alt="气质女人">
+            <div class="gallery-strip">
+                <img src="static/image/fashion/气质女人/product/微信图片_20260625143726_272_556.jpg" class="active">
+                <img src="static/image/fashion/气质女人/product/微信图片_20260625143726_273_556.jpg">
+            </div>
+        </div>
+        <div class="product-showcase-text">
+            <div class="eyebrow">气质女人</div>
+            <h2>优雅如你。<br>气质天成。</h2>
+            <div class="tagline">简约设计，精致面料。展现女性独特的东方韵味。</div>
+            <div class="price">From ¥699</div>
+            <a href="#" class="btn-sm">立即购买</a>
+        </div>
+    </div>
+
+    <!-- 定制T恤 -->
+    <div class="product-showcase-item">
+        <div class="product-showcase-image">
+            <img src="static/image/fashion/定制T恤/first/微信图片_20260625143653_229_556.jpg" alt="定制T恤">
+            <div class="gallery-strip">
+                <img src="static/image/fashion/定制T恤/product/微信图片_20260625143651_226_556.jpg" class="active">
+                <img src="static/image/fashion/定制T恤/product/微信图片_20260625143652_227_556.jpg">
+                <img src="static/image/fashion/定制T恤/product/微信图片_20260625143652_228_556.jpg">
+            </div>
+        </div>
+        <div class="product-showcase-text">
+            <div class="eyebrow">定制T恤</div>
+            <h2>个性定制。<br>专属风格。</h2>
+            <div class="tagline">你的T恤，你做主。高品质纯棉面料，舒适透气。</div>
+            <div class="price">From ¥99</div>
+            <a href="#" class="btn-sm">立即购买</a>
+        </div>
+    </div>
+
+    <!-- 百家姓 -->
+    <div class="product-showcase-item">
+        <div class="product-showcase-image">
+            <img src="static/image/fashion/百家姓/first/5e157b3e55ec46f52526f3d991571e32.jpg" alt="百家姓">
+            <div class="gallery-strip">
+                <img src="static/image/fashion/百家姓/product/微信图片_20260625143718_262_556.jpg" class="active">
+                <img src="static/image/fashion/百家姓/product/微信图片_20260625143720_264_556.jpg">
+                <img src="static/image/fashion/百家姓/product/微信图片_20260625143721_265_556.jpg">
+                <img src="static/image/fashion/百家姓/product/微信图片_20260625143721_266_556.jpg">
+                <img src="static/image/fashion/百家姓/product/微信图片_20260625143722_267_556.jpg">
+                <img src="static/image/fashion/百家姓/product/微信图片_20260625143723_268_556.jpg">
+            </div>
+        </div>
+        <div class="product-showcase-text">
+            <div class="eyebrow">百家姓</div>
+            <h2>传承姓氏文化。<br>穿出东方韵味。</h2>
+            <div class="tagline">精选优质面料，匠心定制属于你的姓氏服饰。</div>
+            <div class="price">From ¥78</div>
+            <a href="#" class="btn-sm">立即购买</a>
+        </div>
+    </div>
+
+    <!-- 魅力女人 (reverse) -->
+    <div class="product-showcase-item reverse">
+        <div class="product-showcase-image">
+            <img src="static/image/fashion/魅力女人/frist/795b4370b7452673f777ee89ba987bc8.jpg" alt="魅力女人">
+            <div class="gallery-strip">
+                <img src="static/image/fashion/魅力女人/product/487d3e526bfe35d442e531aa21a98020.jpg" class="active">
+                <img src="static/image/fashion/魅力女人/product/6d1306281641fd38bcf94c012d7e2e5e.png">
+            </div>
+        </div>
+        <div class="product-showcase-text">
+            <div class="eyebrow">魅力女人</div>
+            <h2>魅力绽放。<br>尽显风华。</h2>
+            <div class="tagline">精致剪裁，优雅设计。为独立自信的你而生。</div>
+            <div class="price">From ¥6,969</div>
+            <a href="#" class="btn-sm">立即购买</a>
+        </div>
+    </div>
+
+</div>
+
+<!-- ====== Compare Grid ====== -->
+
+<section class="compare-section">
+    <h2>选择你的风格</h2>
+    <div class="compare-grid">
+        <div class="compare-card">
+            <img src="static/image/fashion/气质女人/frist/微信图片_20260625143725_271_556.jpg" alt="气质女人">
+            <h3>气质女人</h3>
+            <div class="price">¥699 起</div>
+            <a href="#" class="btn-sm">选购</a>
+        </div>
+        <div class="compare-card">
+            <img src="static/image/fashion/定制T恤/first/微信图片_20260625143653_229_556.jpg" alt="定制T恤">
+            <h3>定制T恤</h3>
+            <div class="price">¥99 起</div>
+            <a href="#" class="btn-sm">选购</a>
+        </div>
+        <div class="compare-card">
+            <img src="static/image/fashion/百家姓/first/5e157b3e55ec46f52526f3d991571e32.jpg" alt="百家姓">
+            <h3>百家姓</h3>
+            <div class="price">¥78 起</div>
+            <a href="#" class="btn-sm">选购</a>
+        </div>
+        <div class="compare-card">
+            <img src="static/image/fashion/魅力女人/frist/795b4370b7452673f777ee89ba987bc8.jpg" alt="魅力女人">
+            <h3>魅力女人</h3>
+            <div class="price">¥6,969 起</div>
+            <a href="#" class="btn-sm">选购</a>
+        </div>
+    </div>
+</section>
+
+<footer class="site-footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>MYSHOP</h4>
+                <p>用心打造的现代电商平台，提供优质产品和卓越服务。</p>
+            </div>
+            <div class="footer-col">
+                <h4>购物</h4>
+                <a href="mobile.html">手机与数码</a>
+                <a href="fashion.html">潮流服饰</a>
+                <a href="index.html">食品与饮料</a>
+                <a href="index.html">珠宝</a>
+            </div>
+            <div class="footer-col">
+                <h4>关于</h4>
+                <a href="#">我们的故事</a>
+                <a href="#">招聘</a>
+                <a href="#">新闻</a>
+                <a href="#">可持续发展</a>
+            </div>
+            <div class="footer-col">
+                <h4>支持</h4>
+                <a href="#">帮助中心</a>
+                <a href="#">配送信息</a>
+                <a href="#">退货</a>
+                <a href="#">联系我们</a>
+            </div>
+            <div class="footer-col">
+                <h4>法律</h4>
+                <a href="#">服务条款</a>
+                <a href="#">隐私政策</a>
+                <a href="#">Cookie 政策</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 MyShop. 保留所有权利。
+        </div>
+    </div>
+</footer>
+
+<script>
+// Gallery image switching
+document.querySelectorAll('.gallery-strip').forEach(function(strip) {
+    var images = strip.querySelectorAll('img');
+    var displayImg = strip.parentElement.querySelector('.product-showcase-image > img');
+    images.forEach(function(img) {
+        img.addEventListener('click', function() {
+            displayImg.src = this.src;
+            images.forEach(function(i) { i.classList.remove('active'); });
+            this.classList.add('active');
+        });
+    });
+});
+</script>
+
+<script>
+// Staggered entrance animation — price high to low
+(function() {
+    var items = document.querySelectorAll('.product-showcase-item');
+    items.forEach(function(item, i) {
+        item.style.transitionDelay = (i * 0.15) + 's';
+    });
+    
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.12 });
+
+    items.forEach(function(item) { observer.observe(item); });
+})();
+</script>
+</body>
+</html>
