@@ -1,4 +1,4 @@
-# Build output
+﻿# Build output
 /build/
 /out/
 /bin/
@@ -6,10 +6,17 @@
 
 # IDE
 /.idea/
-/.project
-/.classpath
-/.settings/
 *.iml
+
+# MyEclipse project config (tracked for team consistency)
+# .project, .classpath, .settings, .mymetadata are allowed
+!.project
+!.classpath
+!.settings/
+!.mymetadata
+
+# MyEclipse local metadata (not tracked)
+/.myeclipse/
 
 # Java
 *.class

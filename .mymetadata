@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="MyShop"
+  id="myeclipse.1234567890"
+  j2ee-spec="6.0"
+  context-root="/MyShop"
+  archive="MyShop.war">
+</project-module>
